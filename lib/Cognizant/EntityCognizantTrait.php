@@ -14,6 +14,7 @@ namespace SR\Doctrine\ORM\Mapping\Cognizant;
 use Doctrine\Common\EventArgs;
 use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
 use Doctrine\Common\Persistence\Event\PreUpdateEventArgs;
+use SR\Reflection\Introspection\MethodIntrospection;
 use SR\Utility\StringTransform;
 
 /**
@@ -93,12 +94,11 @@ trait EntityCognizantTrait
             $eventMethods = $this->findMethods($eventSearch);
 
             foreach ($eventMethods as $method) {
-                if ($method->getName() === $eventSearch) {
+                if ($method->name() === $eventSearch) {
                     continue;
                 }
 
-                $method->setAccessible(true);
-                $method->invoke($this, $eventArgs);
+                $method->invokeArgs($this, [$eventArgs]);
             }
         }
 
@@ -109,7 +109,7 @@ trait EntityCognizantTrait
      * @param null|string $needle
      * @param bool        $reverse
      *
-     * @return \ReflectionMethod[]
+     * @return MethodIntrospection[]
      */
     abstract protected function findMethods($needle = null, $reverse = false);
 }

@@ -34,8 +34,7 @@ trait EntityEquatableTrait
 
         $visitor = function (array $properties, array &$normalized, $bind) {
             foreach ($properties as $property) {
-                $property->setAccessible(true);
-                $normalized[$property->getName()] = $property->getValue($bind);
+                $normalized[$property->name()] = $property->value($bind);
             }
         };
 

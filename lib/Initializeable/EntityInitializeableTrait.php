@@ -11,6 +11,8 @@
 
 namespace SR\Doctrine\ORM\Mapping\Initializeable;
 
+use SR\Reflection\Introspection\MethodIntrospection;
+
 /**
  * Trait EntityInitializeableTrait.
  */
@@ -22,7 +24,6 @@ trait EntityInitializeableTrait
     final protected function doInitialize()
     {
         foreach (self::findMethods('initialize') as $method) {
-            $method->setAccessible(true);
             $method->invoke($this);
         }
 
@@ -33,7 +34,7 @@ trait EntityInitializeableTrait
      * @param null|string $needle
      * @param bool        $reverse
      *
-     * @return \ReflectionMethod[]
+     * @return MethodIntrospection[]
      */
     abstract protected function findMethods($needle = null, $reverse = false);
 }

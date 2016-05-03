@@ -13,6 +13,8 @@ namespace SR\Doctrine\ORM\Mapping\Reflectable;
 
 use SR\Doctrine\ORM\Mapping\Entity;
 use SR\Reflection\Inspect;
+use SR\Reflection\Introspection\MethodIntrospection;
+use SR\Reflection\Introspection\PropertyIntrospection;
 use SR\Utility\StringInspect;
 
 /**
@@ -32,8 +34,7 @@ trait EntityReflectableTrait
         $methodReturnSet = [];
 
         foreach ($this->findMethods($search) as $method) {
-            $method->setAccessible(true);
-            $methodReturnSet[] = $method->invoke($entity, ...$parameters);
+            $methodReturnSet[] = $method->invokeArgs($entity, $parameters);
         }
 
         return $methodReturnSet;
@@ -43,12 +44,12 @@ trait EntityReflectableTrait
      * @param null|string $needle
      * @param bool        $reverse
      *
-     * @return \ReflectionMethod[]
+     * @return MethodIntrospection[]
      */
     final protected function findMethods($needle = null, $reverse = false)
     {
-        $_ = function (\ReflectionMethod $reflect, $index, $needle, $reverse) {
-            return null === $needle || null !== StringInspect::searchPosition($reflect->getName(), $needle, $reverse);
+        $_ = function (MethodIntrospection $reflect, $index, $needle, $reverse) {
+            return null === $needle || null !== StringInspect::searchPosition($reflect->name(), $needle, $reverse);
         };
 
         return Inspect::this($this->getObjectName(true, true))
@@ -59,12 +60,12 @@ trait EntityReflectableTrait
      * @param null|string $needle
      * @param bool        $reverse
      *
-     * @return \ReflectionProperty[]
+     * @return PropertyIntrospection[]
      */
     final protected function findProperties($needle = null, $reverse = false)
     {
-        $_ = function (\ReflectionProperty $reflect, $index, $needle, $reverse) {
-            return null === $needle || null !== StringInspect::searchPosition($reflect->getName(), $needle, $reverse);
+        $_ = function (PropertyIntrospection $reflect, $index, $needle, $reverse) {
+            return null === $needle || null !== StringInspect::searchPosition($reflect->name(), $needle, $reverse);
         };
 
         return Inspect::this($this->getObjectName(true, true))

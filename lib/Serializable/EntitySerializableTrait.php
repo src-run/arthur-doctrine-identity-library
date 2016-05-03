@@ -12,6 +12,7 @@
 namespace SR\Doctrine\ORM\Mapping\Serializable;
 
 use SR\Reflection\Inspect;
+use SR\Reflection\Introspection\PropertyIntrospection;
 use SR\Serializer\Serializer;
 
 /**
@@ -28,14 +29,12 @@ trait EntitySerializableTrait
         $serializable = $this->getSerializableProperties();
 
         foreach ($this->findProperties() as $p) {
-            $p->setAccessible(true);
-
-            if (!in_array($p->getName(), $serializable)) {
+            if (!in_array($p->name(), $serializable)) {
                 $p->setValue($this, null);
                 continue;
             }
 
-            $normalized[$p->getName()] = $p->getValue($this);
+            $normalized[$p->name()] = $p->value($this);
         }
 
         return Serializer::create(Serializer::TYPE_IGBINARY)->serialize($normalized);
@@ -50,7 +49,6 @@ trait EntitySerializableTrait
 
         foreach ($properties as $name => $value) {
             $p = Inspect::this($this)->getProperty($name);
-            $p->setAccessible(true);
             $p->setValue($this, $value);
         }
     }
@@ -77,7 +75,7 @@ trait EntitySerializableTrait
      * @param null|string $needle
      * @param bool        $reverse
      *
-     * @return \ReflectionProperty[]
+     * @return PropertyIntrospection[]
      */
     abstract protected function findProperties($needle = null, $reverse = false);
 }

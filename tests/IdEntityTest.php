@@ -33,10 +33,9 @@ class IdEntityTest extends AbstractEntityType
     public function testFindProperties()
     {
         $method = Inspect::this(self::$entityInitEnabled)->getMethod('findProperties');
-        $method->setAccessible(true);
         $properties = $method->invoke(self::$entityInitEnabled, 'id');
         $this->assertCount(1, $properties);
-        $this->assertSame('id', $properties[0]->getName());
+        $this->assertSame('id', $properties[0]->name());
     }
 
     public function testInitializeMethods()
