@@ -182,6 +182,16 @@ class EntityTest extends AbstractEntityType
 
         $this->assertNull($findPropertyMethod->invoke($instance, 'abcdefg012345'));
     }
+
+    public function testFindPropertySet()
+    {
+        $class = 'SR\Doctrine\ORM\Mapping\Tests\Fixture\EntityA';
+        $instance = new $class();
+        $findPropertySetMethod = Inspect::thisInstance($instance)->getMethod('findPropertySet');
+        $properties = $findPropertySetMethod->invoke($instance, '{^property}', true);
+
+        $this->assertCount(3, $properties);
+    }
 }
 
 /* EOF */
