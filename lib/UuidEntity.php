@@ -11,8 +11,6 @@
 
 namespace SR\Doctrine\ORM\Mapping;
 
-use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
-use Ramsey\Uuid\Exception\UnsupportedOperationException;
 use Ramsey\Uuid\Uuid;
 use SR\Doctrine\ORM\Mapping\Introspectable\EntityIntrospectableTrait;
 

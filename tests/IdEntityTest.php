@@ -47,8 +47,15 @@ class IdEntityTest extends AbstractEntityType
         $this->assertNull($instance->getAnArray());
         $instance->__construct(true);
         $this->assertNotNull($instance->getAString());
+        $this->assertSame('aString', $instance->getAString());
         $this->assertNotNull($instance->getAnInt());
         $this->assertNotNull($instance->getAnArray());
+
+        $aStringProperty = Inspect::thisInstance($instance)->matchOneProperty('aString', 'nameUnQualified');
+        $aStringProperty->setValue($instance, 'aStringValueSetViaReflection');
+
+        $instance->__construct();
+        $this->assertSame('aStringValueSetViaReflection', $instance->getAString());
     }
 }
 

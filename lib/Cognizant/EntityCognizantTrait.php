@@ -15,7 +15,6 @@ use Doctrine\Common\EventArgs;
 use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
 use Doctrine\Common\Persistence\Event\PreUpdateEventArgs;
 use SR\Doctrine\ORM\Mapping\Entity;
-use SR\Reflection\Introspection\MethodIntrospection;
 use SR\Utility\StringTransform;
 
 /**

@@ -61,7 +61,7 @@ trait EntityCastableTrait
 
         return [
             'properties' => $properties,
-            'methods' => $methods
+            'methods' => $methods,
         ];
     }
 

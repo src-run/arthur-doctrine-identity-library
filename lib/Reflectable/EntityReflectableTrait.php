@@ -23,9 +23,9 @@ use SR\Utility\StringInspect;
 trait EntityReflectableTrait
 {
     /**
-     * @param string       $search
-     * @param bool         $regex
-     * @param null|Entity  $entity
+     * @param string      $search
+     * @param bool        $regex
+     * @param null|Entity $entity
      * @param mixed        ...$parameters
      *
      * @return mixed[]

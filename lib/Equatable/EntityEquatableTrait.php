@@ -15,7 +15,7 @@ use SR\Doctrine\ORM\Mapping\Entity;
 use SR\Reflection\Inspect;
 
 /**
- * Interface EntityEquatableInterface.
+ * Trait EntityEquatableTrait.
  */
 trait EntityEquatableTrait
 {

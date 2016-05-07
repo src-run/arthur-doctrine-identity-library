@@ -12,7 +12,6 @@
 namespace SR\Doctrine\ORM\Mapping\Initializeable;
 
 use SR\Doctrine\ORM\Mapping\Entity;
-use SR\Reflection\Introspection\MethodIntrospection;
 
 /**
  * Trait EntityInitializeableTrait.
