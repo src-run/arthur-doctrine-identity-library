@@ -40,6 +40,19 @@ class EntityA extends BaseIdEntity
     {
         return array_merge(parent::getSerializableProperties(), ['propertyOne']);
     }
+
+    /**
+     * @return mixed[]
+     */
+    public function getPropertyThree()
+    {
+        return $this->propertyThree;
+    }
+
+    private function resetPropertyThree()
+    {
+        $this->propertyThree = [];
+    }
 }
 
 /* EOF */

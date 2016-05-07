@@ -20,17 +20,17 @@ use SR\Reflection\Inspect;
 trait EntityEquatableTrait
 {
     /**
-     * @param Entity $entityCompare
+     * @param Entity $compareTo
      *
      * @return bool
      */
-    final public function isEqualTo(Entity $entityCompare)
+    final public function isEqualTo(Entity $compareTo)
     {
         $propertiesSelfNorm = [];
         $propertiesCompNorm = [];
 
-        $propertiesSelf = Inspect::this($this)->properties();
-        $propertiesComp = Inspect::this($entityCompare)->properties();
+        $propertiesSelf = Inspect::thisInstance($this)->properties();
+        $propertiesComp = Inspect::thisInstance($compareTo)->properties();
 
         $visitor = function (array $properties, array &$normalized, $bind) {
             foreach ($properties as $property) {
@@ -39,7 +39,7 @@ trait EntityEquatableTrait
         };
 
         $visitor($propertiesSelf, $propertiesSelfNorm, $this);
-        $visitor($propertiesComp, $propertiesCompNorm, $entityCompare);
+        $visitor($propertiesComp, $propertiesCompNorm, $compareTo);
 
         ksort($propertiesSelfNorm);
         ksort($propertiesCompNorm);
@@ -48,14 +48,19 @@ trait EntityEquatableTrait
     }
 
     /**
-     * @param Entity $entity
+     * @param Entity $compareTo
      *
      * @return bool
      */
-    final public function isEqualToIdentity(Entity $entity)
+    final public function isEqualToIdentity(Entity $compareTo)
     {
-        return $this->getIdentity() !== null && $this->getIdentity() === $entity->getIdentity();
+        return $this->hasIdentity() && $compareTo->hasIdentity() && $this->getIdentity() === $compareTo->getIdentity();
     }
+
+    /**
+     * @return bool
+     */
+    abstract public function hasIdentity();
 
     /**
      * @return mixed

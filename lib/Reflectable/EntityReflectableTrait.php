@@ -23,62 +23,112 @@ use SR\Utility\StringInspect;
 trait EntityReflectableTrait
 {
     /**
-     * @param Entity       $entity
      * @param string       $search
-     * @param {...mixed[]} $parameters
+     * @param bool         $regex
+     * @param null|Entity  $entity
+     * @param mixed        ...$parameters
      *
      * @return mixed[]
      */
-    final protected function invokeMatching(Entity $entity, $search, ...$parameters)
+    final protected function invokeMethodSet($search, $regex = false, Entity $entity = null, ...$parameters)
     {
-        $methodReturnSet = [];
+        $entity = $entity ?: $this;
+        $return = [];
 
-        foreach ($this->findMethods($search) as $method) {
-            $methodReturnSet[] = $method->invokeArgs($entity, $parameters);
+        foreach ($this->findMethodSet($search, $regex, $entity) as $method) {
+            $return[] = $method->invokeArgs($entity, $parameters);
         }
 
-        return $methodReturnSet;
+        return $return;
     }
 
     /**
-     * @param null|string $needle
-     * @param bool        $reverse
+     * @param string      $search
+     * @param null|Entity $entity
+     * @param mixed       ...$parameters
+     *
+     * @return mixed|null
+     */
+    final protected function invokeMethod($search, Entity $entity = null, ...$parameters)
+    {
+        $entity = $entity ?: $this;
+
+        if (null === ($method = $this->findMethod($search, $entity))) {
+            return null;
+        }
+
+        return $method->invokeArgs($entity, $parameters);
+    }
+
+    /**
+     * @param null|string $search
+     * @param bool        $regex
+     * @param null|Entity $entity
      *
      * @return MethodIntrospection[]
      */
-    final protected function findMethods($needle = null, $reverse = false)
+    final protected function findMethodSet($search = null, $regex = false, Entity $entity = null)
     {
-        $_ = function (MethodIntrospection $reflect, $index, $needle, $reverse) {
-            return null === $needle || null !== StringInspect::searchPosition($reflect->name(), $needle, $reverse);
+        $_ = function (MethodIntrospection $m, $index) use ($search, $regex) {
+            if ($regex === true) {
+                return 1 === preg_match($search, $m->nameUnQualified());
+            }
+
+            return null === $search || null !== StringInspect::searchPosition($m->nameUnQualified(), $search);
         };
 
-        return Inspect::this($this->getObjectName(true, true))
-            ->filterMethods($_, null, $needle, $reverse);
+        return Inspect::thisInstance($entity ?: $this)->filterMethods($_, null);
     }
 
     /**
-     * @param null|string $needle
-     * @param bool        $reverse
+     * @param string      $search
+     * @param null|Entity $entity
+     *
+     * @return null|MethodIntrospection
+     */
+    final protected function findMethod($search, Entity $entity = null)
+    {
+        $_ = function (MethodIntrospection $m, $index) use ($search) {
+            return $m->nameUnQualified() === $search;
+        };
+
+        return Inspect::thisInstance($entity ?: $this)->filterOneMethod($_, null);
+    }
+
+    /**
+     * @param null|string $search
+     * @param bool        $regex
+     * @param null|Entity $entity
      *
      * @return PropertyIntrospection[]
      */
-    final protected function findProperties($needle = null, $reverse = false)
+    final protected function findPropertySet($search = null, $regex = false, Entity $entity = null)
     {
-        $_ = function (PropertyIntrospection $reflect, $index, $needle, $reverse) {
-            return null === $needle || null !== StringInspect::searchPosition($reflect->name(), $needle, $reverse);
+        $_ = function (PropertyIntrospection $p, $index) use ($search, $regex) {
+            if ($regex === true) {
+                return 1 === preg_match($search, $p->nameUnQualified());
+            }
+
+            return null === $search || null !== StringInspect::searchPosition($p->nameUnQualified(), $search);
         };
 
-        return Inspect::this($this->getObjectName(true, true))
-            ->filterProperties($_, null, $needle, $reverse);
+        return Inspect::thisInstance($entity ?: $this)->filterProperties($_, null);
     }
 
     /**
-     * @param bool $qualified
-     * @param bool $static
+     * @param string      $search
+     * @param null|Entity $entity
      *
-     * @return string
+     * @return null|PropertyIntrospection
      */
-    abstract public function getObjectName($qualified = false, $static = false);
+    final protected function findProperty($search, Entity $entity = null)
+    {
+        $_ = function (PropertyIntrospection $p, $index) use ($search) {
+            return $p->nameUnQualified() === $search;
+        };
+
+        return Inspect::thisInstance($entity ?: $this)->filterOneProperty($_, null);
+    }
 }
 
 /* EOF */

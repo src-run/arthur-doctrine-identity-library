@@ -21,7 +21,7 @@ trait EntityCopyableTrait
     public function __clone()
     {
         if ($this->isCloneSafe()) {
-            $this->invokeMatching($this, 'doClone');
+            $this->invokeMethodSet('{^clone}', true);
         }
     }
 
@@ -30,7 +30,7 @@ trait EntityCopyableTrait
      */
     final public function isCloneSafe()
     {
-        return (bool) $this->hasIdentity();
+        return $this->hasIdentity();
     }
 
     /**
@@ -39,13 +39,14 @@ trait EntityCopyableTrait
     abstract public function hasIdentity();
 
     /**
-     * @param Entity       $entity
-     * @param string       $search
-     * @param {...mixed[]} $parameters
+     * @param string      $search
+     * @param bool        $regex
+     * @param null|Entity $entity
+     * @param mixed       ...$parameters
      *
      * @return mixed[]
      */
-    abstract protected function invokeMatching(Entity $entity, $search, ...$parameters);
+    abstract protected function invokeMethodSet($search, $regex = false, Entity $entity = null, ...$parameters);
 }
 
 /* EOF */

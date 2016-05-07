@@ -11,6 +11,7 @@
 
 namespace SR\Doctrine\ORM\Mapping\Initializeable;
 
+use SR\Doctrine\ORM\Mapping\Entity;
 use SR\Reflection\Introspection\MethodIntrospection;
 
 /**
@@ -19,24 +20,30 @@ use SR\Reflection\Introspection\MethodIntrospection;
 trait EntityInitializeableTrait
 {
     /**
-     * @return $this
+     * @var bool
      */
-    final protected function doInitialize()
-    {
-        foreach (self::findMethods('initialize') as $method) {
-            $method->invoke($this);
-        }
+    private $initialized = false;
 
-        return $this;
+    /**
+     * @param bool $forceInitialize
+     */
+    final protected function doInitialize($forceInitialize = false)
+    {
+        if ($this->initialized === false || $forceInitialize === true) {
+            $this->initialized = true;
+            $this->invokeMethodSet('initialize');
+        }
     }
 
     /**
-     * @param null|string $needle
-     * @param bool        $reverse
+     * @param string      $search
+     * @param bool        $regex
+     * @param null|Entity $entity
+     * @param mixed       ...$parameters
      *
-     * @return MethodIntrospection[]
+     * @return mixed[]
      */
-    abstract protected function findMethods($needle = null, $reverse = false);
+    abstract protected function invokeMethodSet($search, $regex = false, Entity $entity = null, ...$parameters);
 }
 
 /* EOF */

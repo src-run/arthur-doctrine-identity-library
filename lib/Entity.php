@@ -39,7 +39,7 @@ abstract class Entity implements EntityInterface
     public function __construct($initialize = true)
     {
         if ($initialize) {
-            $this->invokeMatching($this, 'doInitialize');
+            $this->doInitialize();
         }
     }
 

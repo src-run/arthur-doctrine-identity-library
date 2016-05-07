@@ -67,12 +67,12 @@ class IdEntityTwo extends BaseIdEntity
         return $this->anArray;
     }
 
-    protected function doCloneOperationsOne()
+    protected function cloneOperationsOne()
     {
         $this->aString = 'a-cloned-string';
     }
 
-    protected function doCloneOperationsTwo()
+    protected function cloneOperationsTwo()
     {
         $this->anInt = -10;
     }

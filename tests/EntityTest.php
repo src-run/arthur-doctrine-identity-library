@@ -11,6 +11,8 @@
 
 namespace SR\Doctrine\ORM\Mapping\Tests;
 
+use SR\Reflection\Inspect;
+
 /**
  * Class EntityTest.
  */
@@ -151,6 +153,34 @@ class EntityTest extends AbstractEntityType
         $instanceA->unserialize($serialized);
 
         $this->assertContains('property-one', $instanceA->__toArray()['properties']);
+    }
+
+    public function testInvokeMethod()
+    {
+        $class = 'SR\Doctrine\ORM\Mapping\Tests\Fixture\EntityA';
+        $instance = new $class();
+        $invokeMethodMethod = Inspect::thisInstance($instance)->getMethod('invokeMethod');
+
+        $this->assertGreaterThan(1, count($instance->getPropertyThree()));
+        $invokeMethodMethod->invoke($instance, 'resetPropertyThree');
+        $this->assertLessThan(1, count($instance->getPropertyThree()));
+
+        $this->assertNull($invokeMethodMethod->invoke($instance, 'abcdefg012345'));
+    }
+
+    public function testFindProperty()
+    {
+        $class = 'SR\Doctrine\ORM\Mapping\Tests\Fixture\EntityA';
+        $instance = new $class();
+        $findPropertyMethod = Inspect::thisInstance($instance)->getMethod('findProperty');
+        $property = $findPropertyMethod->invoke($instance, 'propertyThree');
+
+        $this->assertGreaterThan(1, count($property->value($instance)));
+        $property->setValue($instance, [1, 2, 3]);
+        $this->assertSame([1, 2, 3], $property->value($instance));
+        $this->assertSame([1, 2, 3], $instance->getPropertyThree());
+
+        $this->assertNull($findPropertyMethod->invoke($instance, 'abcdefg012345'));
     }
 }
 

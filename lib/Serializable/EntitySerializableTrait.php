@@ -11,6 +11,7 @@
 
 namespace SR\Doctrine\ORM\Mapping\Serializable;
 
+use SR\Doctrine\ORM\Mapping\Entity;
 use SR\Reflection\Inspect;
 use SR\Reflection\Introspection\PropertyIntrospection;
 use SR\Serializer\Serializer;
@@ -25,19 +26,18 @@ trait EntitySerializableTrait
      */
     public function serialize()
     {
-        $normalized = [];
-        $serializable = $this->getSerializableProperties();
+        $properties = [];
 
-        foreach ($this->findProperties() as $p) {
-            if (!in_array($p->name(), $serializable)) {
-                $p->setValue($this, null);
+        foreach ($this->findPropertySet() as $property) {
+            if (!in_array($property->name(), $this->getSerializableProperties())) {
+                $property->setValue($this, null);
                 continue;
             }
 
-            $normalized[$p->name()] = $p->value($this);
+            $properties[$property->name()] = $property->value($this);
         }
 
-        return Serializer::create(Serializer::TYPE_IGBINARY)->serialize($normalized);
+        return Serializer::create(Serializer::TYPE_IGBINARY)->serialize($properties);
     }
 
     /**
@@ -45,11 +45,10 @@ trait EntitySerializableTrait
      */
     public function unserialize($data)
     {
-        $properties = Serializer::create(Serializer::TYPE_IGBINARY)->unserialize($data);
+        $properties = (array) Serializer::create(Serializer::TYPE_IGBINARY)->unserialize($data);
 
         foreach ($properties as $name => $value) {
-            $p = Inspect::this($this)->getProperty($name);
-            $p->setValue($this, $value);
+            Inspect::this($this)->getProperty($name)->setValue($this, $value);
         }
     }
 
@@ -72,12 +71,13 @@ trait EntitySerializableTrait
     abstract public function hasIdentityType();
 
     /**
-     * @param null|string $needle
-     * @param bool        $reverse
+     * @param null|string $search
+     * @param bool        $regex
+     * @param null|Entity $entity
      *
      * @return PropertyIntrospection[]
      */
-    abstract protected function findProperties($needle = null, $reverse = false);
+    abstract protected function findPropertySet($search = null, $regex = false, Entity $entity = null);
 }
 
 /* EOF */

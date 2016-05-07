@@ -11,6 +11,10 @@
 
 namespace SR\Doctrine\ORM\Mapping\Castable;
 
+use SR\Doctrine\ORM\Mapping\Entity;
+use SR\Reflection\Introspection\MethodIntrospection;
+use SR\Reflection\Introspection\PropertyIntrospection;
+
 /**
  * Trait EntityCastableTrait.
  */
@@ -44,7 +48,21 @@ trait EntityCastableTrait
      */
     final public function __toArray()
     {
-        return ['properties' => get_object_vars($this), 'methods' => get_class_methods($this)];
+        $properties = [];
+        $methods = [];
+
+        foreach ($this->findPropertySet() as $p) {
+            $properties[$p->nameUnQualified()] = $p->value($this);
+        }
+
+        foreach ($this->findMethodSet() as $m) {
+            $methods[] = $m->nameUnQualified();
+        }
+
+        return [
+            'properties' => $properties,
+            'methods' => $methods
+        ];
     }
 
     /**
@@ -77,6 +95,24 @@ trait EntityCastableTrait
      * @return string
      */
     abstract public function getParentName($qualified = false, $instance = null);
+
+    /**
+     * @param null|string $search
+     * @param bool        $regex
+     * @param null|Entity $entity
+     *
+     * @return MethodIntrospection[]
+     */
+    abstract protected function findMethodSet($search = null, $regex = false, Entity $entity = null);
+
+    /**
+     * @param null|string $search
+     * @param bool        $regex
+     * @param null|Entity $entity
+     *
+     * @return PropertyIntrospection[]
+     */
+    abstract protected function findPropertySet($search = null, $regex = false, Entity $entity = null);
 }
 
 /* EOF */

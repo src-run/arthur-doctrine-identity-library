@@ -23,14 +23,14 @@ interface EntityEquatableInterface
      *
      * @return bool
      */
-    public function isEqualTo(Entity $entityCompare);
+    public function isEqualTo(Entity $compareTo);
 
     /**
-     * @param Entity $entity
+     * @param Entity $compareTo
      *
      * @return bool
      */
-    public function isEqualToIdentity(Entity $entity);
+    public function isEqualToIdentity(Entity $compareTo);
 }
 
 /* EOF */
