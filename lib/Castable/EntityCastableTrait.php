@@ -11,34 +11,33 @@
 
 namespace SR\Doctrine\ORM\Mapping\Castable;
 
-use SR\Doctrine\ORM\Mapping\Entity;
-use SR\Reflection\Introspection\MethodIntrospection;
-use SR\Reflection\Introspection\PropertyIntrospection;
+use SR\Doctrine\ORM\Mapping\Reflectable\ReflectionMethodSearch;
+use SR\Doctrine\ORM\Mapping\Reflectable\ReflectionPropertySearch;
 
-/**
- * Trait EntityCastableTrait.
- */
 trait EntityCastableTrait
 {
     /**
      * @return string
      */
-    final public function __toString()
+    final public function __toString(): string
     {
-        $identity = $this->hasIdentity() ? $this->getIdentity() : 'null';
-
-        return sprintf('%s [%s:%s]', $this->getObjectName(), $this->getIdentityType(), $identity);
+        return vsprintf('%s [%s:%s]', [
+            $this->getCalledClassName(),
+            $this->getIdentityType(),
+            $this->hasIdentity() ? $this->getIdentity() : 'null',
+        ]);
     }
 
     /**
      * @return array
      */
-    final public function __debugInfo()
+    final public function __debugInfo(): array
     {
         return array_merge([
-            'classNameSelf' => $this->getObjectName(true, true),
-            'classNameParent' => $this->getParentName(true, $this),
-            'identityType' => $this->getIdentityType(),
+            'classRoot'     => $this->getRootClassName(),
+            'classParent'   => $this->getParentClassName(),
+            'classCalled'   => $this->getCalledClassName(),
+            'identityType'  => $this->getIdentityType(),
             'identityValue' => $this->getIdentity(),
         ], $this->__toArray());
     }
@@ -46,73 +45,25 @@ trait EntityCastableTrait
     /**
      * @return array[]
      */
-    final public function __toArray()
+    final public function __toArray(): array
     {
-        $properties = [];
-        $methods = [];
-
-        foreach ($this->findPropertySet() as $p) {
-            $properties[$p->nameUnQualified()] = $p->value($this);
-        }
-
-        foreach ($this->findMethodSet() as $m) {
-            $methods[] = $m->nameUnQualified();
-        }
-
         return [
-            'properties' => $properties,
-            'methods' => $methods,
+            'properties' => $this->searchProperties()->find(),
+            'methods' => $this->searchMethods()->find(),
         ];
     }
 
     /**
-     * @return mixed
-     */
-    abstract public function getIdentity();
-
-    /**
-     * @return bool
-     */
-    abstract public function hasIdentity();
-
-    /**
-     * @return string
-     */
-    abstract public function getIdentityType();
-
-    /**
-     * @param bool $qualified
-     * @param bool $static
-     *
-     * @return string
-     */
-    abstract public function getObjectName($qualified = false, $static = false);
-
-    /**
-     * @param bool        $qualified
-     * @param null|object $instance
-     *
-     * @return string
-     */
-    abstract public function getParentName($qualified = false, $instance = null);
-
-    /**
      * @param null|string $search
-     * @param bool        $regex
-     * @param null|Entity $entity
      *
-     * @return MethodIntrospection[]
+     * @return ReflectionMethodSearch
      */
-    abstract protected function findMethodSet($search = null, $regex = false, Entity $entity = null);
+    abstract public function searchMethods(string $search = null);
 
     /**
-     * @param null|string $search
-     * @param bool        $regex
-     * @param null|Entity $entity
+     * @param string|null $search
      *
-     * @return PropertyIntrospection[]
+     * @return ReflectionPropertySearch
      */
-    abstract protected function findPropertySet($search = null, $regex = false, Entity $entity = null);
+    abstract public function searchProperties(string $search = null);
 }
-
-/* EOF */

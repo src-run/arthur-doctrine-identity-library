@@ -13,9 +13,6 @@ namespace SR\Doctrine\ORM\Mapping;
 
 use SR\Doctrine\ORM\Mapping\Introspectable\EntityIntrospectableTrait;
 
-/**
- * Class SlugEntity.
- */
 class SlugEntity extends Entity
 {
     use EntityIntrospectableTrait;
@@ -63,5 +60,3 @@ class SlugEntity extends Entity
         return $this;
     }
 }
-
-/* EOF */

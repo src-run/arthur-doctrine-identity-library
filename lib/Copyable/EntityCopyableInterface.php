@@ -11,19 +11,12 @@
 
 namespace SR\Doctrine\ORM\Mapping\Copyable;
 
-/**
- * Interface EntityCopyableInterface.
- */
 interface EntityCopyableInterface
 {
-    /**
-     */
     public function __clone();
 
     /**
      * @return bool
      */
-    public function isCloneSafe();
+    public function isCloneSafe(): bool;
 }
-
-/* EOF */

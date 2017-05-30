@@ -11,33 +11,23 @@
 
 namespace SR\Doctrine\ORM\Mapping\Serializable;
 
-use SR\Doctrine\ORM\Mapping\Entity;
+use SR\Doctrine\ORM\Mapping\Reflectable\ReflectionPropertySearch;
 use SR\Reflection\Inspect;
-use SR\Reflection\Introspection\PropertyIntrospection;
+use SR\Reflection\Inspector\PropertyInspector;
 use SR\Serializer\Serializer;
 
-/**
- * Trait EntitySerializableTrait.
- */
 trait EntitySerializableTrait
 {
     /**
      * @return string
      */
-    public function serialize()
+    public function serialize(): string
     {
-        $properties = [];
-
-        foreach ($this->findPropertySet() as $property) {
-            if (!in_array($property->name(), $this->getSerializableProperties())) {
-                $property->setValue($this, null);
-                continue;
-            }
-
-            $properties[$property->name()] = $property->value($this);
-        }
-
-        return Serializer::create(Serializer::TYPE_IGBINARY)->serialize($properties);
+        return Serializer::create(Serializer::TYPE_IGBINARY)->serialize(array_map(function (PropertyInspector $p) {
+            return ['n' => $p->nameUnQualified(), 'v' => $p->value($this)];
+        }, array_filter($this->searchProperties()->find(), function (PropertyInspector $p) {
+            return in_array($p->nameUnQualified(), $this->getSerializableProperties());
+        })));
     }
 
     /**
@@ -45,39 +35,25 @@ trait EntitySerializableTrait
      */
     public function unserialize($data)
     {
-        $properties = (array) Serializer::create(Serializer::TYPE_IGBINARY)->unserialize($data);
+        $inspector = Inspect::useInstance($this);
 
-        foreach ($properties as $name => $value) {
-            Inspect::this($this)->getProperty($name)->setValue($this, $value);
+        foreach ((array) Serializer::create(Serializer::TYPE_IGBINARY)->unserialize($data) as $p) {
+            $inspector->getProperty($p['n'])->setValue($this, $p['v']);
         }
     }
 
     /**
      * @return string[]
      */
-    protected function getSerializableProperties()
+    public function getSerializableProperties(): array
     {
         return $this->hasIdentityType() ? [$this->getIdentityType()] : [];
     }
 
     /**
-     * @return string
-     */
-    abstract public function getIdentityType();
-
-    /**
-     * @return bool
-     */
-    abstract public function hasIdentityType();
-
-    /**
      * @param null|string $search
-     * @param bool        $regex
-     * @param null|Entity $entity
      *
-     * @return PropertyIntrospection[]
+     * @return ReflectionPropertySearch
      */
-    abstract protected function findPropertySet($search = null, $regex = false, Entity $entity = null);
+    abstract public function searchProperties(string $search = null);
 }
-
-/* EOF */

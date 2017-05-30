@@ -36,9 +36,17 @@ class EntityA extends BaseIdEntity
     /**
      * @return string[]
      */
-    protected function getSerializableProperties()
+    public function getSerializableProperties(): array
     {
         return array_merge(parent::getSerializableProperties(), ['propertyOne']);
+    }
+
+    /**
+     * @param string $string
+     */
+    public function setPropertyOne(string $string)
+    {
+        $this->propertyOne = $string;
     }
 
     /**

@@ -11,26 +11,26 @@
 
 namespace SR\Doctrine\ORM\Mapping\Introspectable;
 
-/**
- * Interface EntityIntrospectableInterface.
- */
 interface EntityIntrospectableInterface
 {
     /**
      * @param bool $qualified
-     * @param bool $static
      *
      * @return string
      */
-    public function getObjectName($qualified = false, $static = false);
+    public function getCalledClassName(bool $qualified = true): string;
 
     /**
-     * @param bool        $qualified
-     * @param null|object $instance
+     * @param bool $qualified
      *
      * @return string
      */
-    public function getParentName($qualified = false, $instance = null);
-}
+    public function getParentClassName(bool $qualified = true): string;
 
-/* EOF */
+    /**
+     * @param bool $qualified
+     *
+     * @return string
+     */
+    public function getRootClassName(bool $qualified = true): string;
+}

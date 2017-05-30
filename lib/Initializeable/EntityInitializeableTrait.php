@@ -11,38 +11,30 @@
 
 namespace SR\Doctrine\ORM\Mapping\Initializeable;
 
-use SR\Doctrine\ORM\Mapping\Entity;
+use SR\Doctrine\ORM\Mapping\Reflectable\ReflectionMethodSearch;
 
-/**
- * Trait EntityInitializeableTrait.
- */
 trait EntityInitializeableTrait
 {
     /**
      * @var bool
      */
-    private $initialized = false;
+    private $isInitialized = false;
 
     /**
-     * @param bool $forceInitialize
+     * @param bool $forceInitialization
      */
-    final protected function doInitialize($forceInitialize = false)
+    final protected function doInitialization(bool $forceInitialization = false)
     {
-        if ($this->initialized === false || $forceInitialize === true) {
-            $this->initialized = true;
-            $this->invokeMethodSet('initialize');
+        if ($this->isInitialized === false || $forceInitialization === true) {
+            $this->isInitialized = true;
+            $this->searchMethods('initialize')->invoke();
         }
     }
 
     /**
-     * @param string      $search
-     * @param bool        $regex
-     * @param null|Entity $entity
-     * @param mixed       ...$parameters
+     * @param null|string $search
      *
-     * @return mixed[]
+     * @return ReflectionMethodSearch
      */
-    abstract protected function invokeMethodSet($search, $regex = false, Entity $entity = null, ...$parameters);
+    abstract public function searchMethods(string $search = null);
 }
-
-/* EOF */

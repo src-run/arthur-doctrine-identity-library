@@ -14,9 +14,6 @@ namespace SR\Doctrine\ORM\Mapping;
 use Ramsey\Uuid\Uuid;
 use SR\Doctrine\ORM\Mapping\Introspectable\EntityIntrospectableTrait;
 
-/**
- * Class UuidEntity.
- */
 class UuidEntity extends Entity
 {
     use EntityIntrospectableTrait;
@@ -85,5 +82,3 @@ class UuidEntity extends Entity
         return $this;
     }
 }
-
-/* EOF */

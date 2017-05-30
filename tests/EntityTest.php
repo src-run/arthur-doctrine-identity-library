@@ -11,6 +11,10 @@
 
 namespace SR\Doctrine\ORM\Mapping\Tests;
 
+use SR\Doctrine\ORM\Mapping\EntityInterface;
+use SR\Doctrine\ORM\Mapping\Reflectable\ReflectionMethodSearch;
+use SR\Doctrine\ORM\Mapping\Reflectable\ReflectionPropertySearch;
+use SR\Doctrine\ORM\Mapping\Tests\Fixture\EntityA;
 use SR\Reflection\Inspect;
 
 /**
@@ -146,51 +150,66 @@ class EntityTest extends AbstractEntityType
 
     public function testSerializable()
     {
-        $class = 'SR\Doctrine\ORM\Mapping\Tests\Fixture\EntityA';
-        $instanceA = new $class();
+        $instanceA = new EntityA();
+        $instanceA->setPropertyOne('a new value for property one');
 
-        $serialized = $instanceA->serialize();
-        $instanceA->unserialize($serialized);
+        $instanceB = new EntityA();
+        $instanceB->unserialize($instanceA->serialize());
 
-        $this->assertContains('property-one', $instanceA->__toArray()['properties']);
+        $this->assertTrue($instanceA->isEqualTo($instanceB));
     }
 
     public function testInvokeMethod()
     {
-        $class = 'SR\Doctrine\ORM\Mapping\Tests\Fixture\EntityA';
-        $instance = new $class();
-        $invokeMethodMethod = Inspect::thisInstance($instance)->getMethod('invokeMethod');
+        $instance = new EntityA();
 
         $this->assertGreaterThan(1, count($instance->getPropertyThree()));
-        $invokeMethodMethod->invoke($instance, 'resetPropertyThree');
+        $this->searchMethodsFor($instance, 'resetPropertyThree')->invoke();
         $this->assertLessThan(1, count($instance->getPropertyThree()));
 
-        $this->assertNull($invokeMethodMethod->invoke($instance, 'abcdefg012345'));
+        $this->assertEmpty($this->searchMethodsFor($instance, 'abcdefg012345')->find());
+        $this->assertNull($this->searchMethodsFor($instance, 'abcdefg012345')->findOne());
+    }
+
+    /**
+     * @param EntityInterface $entity
+     * @param string          $search
+     *
+     * @return ReflectionMethodSearch
+     */
+    private function searchMethodsFor(EntityInterface $entity, string $search = null)
+    {
+        return Inspect::useInstance($entity)->getMethod('searchMethods')->invoke($entity, $search);
     }
 
     public function testFindProperty()
     {
-        $class = 'SR\Doctrine\ORM\Mapping\Tests\Fixture\EntityA';
-        $instance = new $class();
-        $findPropertyMethod = Inspect::thisInstance($instance)->getMethod('findProperty');
-        $property = $findPropertyMethod->invoke($instance, 'propertyThree');
+        $instance = new EntityA();
+        $property = $this->searchPropertiesFor($instance, 'propertyThree')->findOne();
 
         $this->assertGreaterThan(1, count($property->value($instance)));
         $property->setValue($instance, [1, 2, 3]);
         $this->assertSame([1, 2, 3], $property->value($instance));
         $this->assertSame([1, 2, 3], $instance->getPropertyThree());
-
-        $this->assertNull($findPropertyMethod->invoke($instance, 'abcdefg012345'));
     }
 
     public function testFindPropertySet()
     {
-        $class = 'SR\Doctrine\ORM\Mapping\Tests\Fixture\EntityA';
-        $instance = new $class();
-        $findPropertySetMethod = Inspect::thisInstance($instance)->getMethod('findPropertySet');
-        $properties = $findPropertySetMethod->invoke($instance, '{^property}', true);
+        $instance = new EntityA();
+        $properties = $this->searchPropertiesFor($instance, '{^property}')->find();
 
         $this->assertCount(3, $properties);
+    }
+
+    /**
+     * @param EntityInterface $entity
+     * @param string          $search
+     *
+     * @return ReflectionPropertySearch
+     */
+    private function searchPropertiesFor(EntityInterface $entity, string $search = null)
+    {
+        return Inspect::useInstance($entity)->getMethod('searchProperties')->invoke($entity, $search);
     }
 }
 

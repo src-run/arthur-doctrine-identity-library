@@ -11,20 +11,20 @@
 
 namespace SR\Doctrine\ORM\Mapping\Serializable;
 
-/**
- * Interface EntitySerializableInterface.
- */
 interface EntitySerializableInterface extends \Serializable
 {
     /**
      * @return string
      */
-    public function serialize();
+    public function serialize(): string;
 
     /**
      * @param string $data
      */
     public function unserialize($data);
-}
 
-/* EOF */
+    /**
+     * @return string[]
+     */
+    public function getSerializableProperties(): array;
+}

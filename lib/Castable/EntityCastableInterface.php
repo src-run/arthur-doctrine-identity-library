@@ -11,25 +11,20 @@
 
 namespace SR\Doctrine\ORM\Mapping\Castable;
 
-/**
- * Interface EntityCastableInterface.
- */
 interface EntityCastableInterface
 {
     /**
      * @return string
      */
-    public function __toString();
+    public function __toString(): string;
 
     /**
      * @return array
      */
-    public function __debugInfo();
+    public function __debugInfo(): array;
 
     /**
      * @return array[]
      */
-    public function __toArray();
+    public function __toArray(): array;
 }
-
-/* EOF */

@@ -13,52 +13,14 @@ namespace SR\Doctrine\ORM\Mapping;
 
 use SR\Doctrine\ORM\Mapping\Castable\EntityCastableInterface;
 use SR\Doctrine\ORM\Mapping\Copyable\EntityCopyableInterface;
+use SR\Doctrine\ORM\Mapping\Identifiable\EntityIdentifiableInterface;
 use SR\Doctrine\ORM\Mapping\Introspectable\EntityIntrospectableInterface;
 use SR\Doctrine\ORM\Mapping\Equatable\EntityEquatableInterface;
-use SR\Doctrine\ORM\Mapping\Initializeable\EntityInitializeableInterface;
 use SR\Doctrine\ORM\Mapping\Cognizant\EntityCognizantInterface;
 use SR\Doctrine\ORM\Mapping\Serializable\EntitySerializableInterface;
 
-/**
- * Interface EntityInterface.
- */
-interface EntityInterface extends EntityCastableInterface, EntityCopyableInterface, EntityIntrospectableInterface,
-                                  EntityEquatableInterface, EntityInitializeableInterface, EntityCognizantInterface,
+interface EntityInterface extends EntityCastableInterface, EntityCopyableInterface, EntityIdentifiableInterface,
+                                  EntityIntrospectableInterface, EntityEquatableInterface, EntityCognizantInterface,
                                   EntitySerializableInterface
 {
-    /**
-     * @return string
-     */
-    public function getIdentityType();
-
-    /**
-     * @return bool
-     */
-    public function hasIdentityType();
-
-    /**
-     * @param bool $qualified
-     *
-     * @return string
-     */
-    public function getIdentityName($qualified = false);
-
-    /**
-     * @param mixed $identity
-     *
-     * @return $this
-     */
-    public function setIdentity($identity);
-
-    /**
-     * @return mixed
-     */
-    public function getIdentity();
-
-    /**
-     * @return bool
-     */
-    public function hasIdentity();
 }
-
-/* EOF */

@@ -13,37 +13,35 @@ namespace SR\Doctrine\ORM\Mapping\Introspectable;
 
 use SR\Reflection\Inspect;
 
-/**
- * Trait EntityIntrospectableTrait.
- */
 trait EntityIntrospectableTrait
 {
     /**
      * @param bool $qualified
-     * @param bool $static
      *
      * @return string
      */
-    final public function getObjectName($qualified = false, $static = false)
+    final public function getCalledClassName(bool $qualified = true): string
     {
-        return Inspect::this($static ? get_called_class() : get_class())->name($qualified);
+        return Inspect::using(get_called_class())->name($qualified);
     }
 
     /**
-     * @param bool        $qualified
-     * @param null|object $instance
+     * @param bool $qualified
      *
      * @return string
      */
-    final public function getParentName($qualified = false, $instance = null)
+    final public function getParentClassName(bool $qualified = true): string
     {
-        return Inspect::this(get_parent_class($instance))->name($qualified);
+        return Inspect::using(get_parent_class(get_called_class()))->name($qualified);
     }
 
     /**
-     * @return mixed
+     * @param bool $qualified
+     *
+     * @return string
      */
-    abstract public function __toArray();
+    final public function getRootClassName(bool $qualified = true): string
+    {
+        return Inspect::using(__CLASS__)->name($qualified);
+    }
 }
-
-/* EOF */

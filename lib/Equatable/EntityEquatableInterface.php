@@ -13,24 +13,19 @@ namespace SR\Doctrine\ORM\Mapping\Equatable;
 
 use SR\Doctrine\ORM\Mapping\Entity;
 
-/**
- * Interface EntityEquatableInterface.
- */
 interface EntityEquatableInterface
 {
     /**
-     * @param Entity $entityCompare
+     * @param Entity $compareTo
      *
      * @return bool
      */
-    public function isEqualTo(Entity $compareTo);
+    public function isEqualTo(Entity $compareTo): bool;
 
     /**
      * @param Entity $compareTo
      *
      * @return bool
      */
-    public function isEqualToIdentity(Entity $compareTo);
+    public function isEqualToIdentity(Entity $compareTo): bool;
 }
-
-/* EOF */

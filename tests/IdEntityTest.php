@@ -11,6 +11,9 @@
 
 namespace SR\Doctrine\ORM\Mapping\Tests;
 
+use SR\Doctrine\ORM\Mapping\EntityInterface;
+use SR\Doctrine\ORM\Mapping\Reflectable\ReflectionPropertySearch;
+use SR\Doctrine\ORM\Mapping\Tests\Fixture\EntityA;
 use SR\Reflection\Inspect;
 
 /**
@@ -32,8 +35,7 @@ class IdEntityTest extends AbstractEntityType
 
     public function testFindPropertySet()
     {
-        $method = Inspect::this(self::$entityInitEnabled)->getMethod('findPropertySet');
-        $properties = $method->invoke(self::$entityInitEnabled, 'id');
+        $properties = $this->searchPropertiesFor(self::$entityInitEnabled)->find();
         $this->assertCount(1, $properties);
         $this->assertSame('id', $properties[0]->name());
     }
@@ -51,11 +53,22 @@ class IdEntityTest extends AbstractEntityType
         $this->assertNotNull($instance->getAnInt());
         $this->assertNotNull($instance->getAnArray());
 
-        $aStringProperty = Inspect::thisInstance($instance)->matchOneProperty('aString', 'nameUnQualified');
+        $aStringProperty = Inspect::useInstance($instance)->matchOneProperty('aString', 'nameUnQualified');
         $aStringProperty->setValue($instance, 'aStringValueSetViaReflection');
 
         $instance->__construct();
         $this->assertSame('aStringValueSetViaReflection', $instance->getAString());
+    }
+
+    /**
+     * @param EntityInterface $entity
+     * @param string          $search
+     *
+     * @return ReflectionPropertySearch
+     */
+    private function searchPropertiesFor(EntityInterface $entity, string $search = null)
+    {
+        return Inspect::useInstance($entity)->getMethod('searchProperties')->invoke($entity, $search);
     }
 }
 

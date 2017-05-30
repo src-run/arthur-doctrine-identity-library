@@ -14,9 +14,6 @@ namespace SR\Doctrine\ORM\Mapping\Cognizant;
 use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
 use Doctrine\Common\Persistence\Event\PreUpdateEventArgs;
 
-/**
- * Interface EntityCognizantInterface.
- */
 interface EntityCognizantInterface
 {
     /**
@@ -54,5 +51,3 @@ interface EntityCognizantInterface
      */
     public function eventPostLoad(LifecycleEventArgs $eventArgs = null);
 }
-
-/* EOF */

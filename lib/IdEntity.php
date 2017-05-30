@@ -13,9 +13,6 @@ namespace SR\Doctrine\ORM\Mapping;
 
 use SR\Doctrine\ORM\Mapping\Introspectable\EntityIntrospectableTrait;
 
-/**
- * Class IdEntity.
- */
 class IdEntity extends Entity
 {
     use EntityIntrospectableTrait;
@@ -48,7 +45,7 @@ class IdEntity extends Entity
     /**
      * @return bool
      */
-    public function hasId()
+    public function hasId(): bool
     {
         return $this->hasIdentity();
     }
@@ -63,5 +60,3 @@ class IdEntity extends Entity
         return $this;
     }
 }
-
-/* EOF */

@@ -11,42 +11,29 @@
 
 namespace SR\Doctrine\ORM\Mapping\Copyable;
 
-use SR\Doctrine\ORM\Mapping\Entity;
+use SR\Doctrine\ORM\Mapping\Reflectable\ReflectionMethodSearch;
 
-/**
- * Trait EntityCopyableTrait.
- */
 trait EntityCopyableTrait
 {
     public function __clone()
     {
         if ($this->isCloneSafe()) {
-            $this->invokeMethodSet('{^clone}', true);
+            $this->searchMethods('{^clone}')->invoke();
         }
     }
 
     /**
      * @return bool
      */
-    final public function isCloneSafe()
+    final public function isCloneSafe(): bool
     {
         return $this->hasIdentity();
     }
 
     /**
-     * @return mixed
-     */
-    abstract public function hasIdentity();
-
-    /**
-     * @param string      $search
-     * @param bool        $regex
-     * @param null|Entity $entity
-     * @param mixed       ...$parameters
+     * @param null|string $search
      *
-     * @return mixed[]
+     * @return ReflectionMethodSearch
      */
-    abstract protected function invokeMethodSet($search, $regex = false, Entity $entity = null, ...$parameters);
+    abstract public function searchMethods(string $search = null);
 }
-
-/* EOF */
