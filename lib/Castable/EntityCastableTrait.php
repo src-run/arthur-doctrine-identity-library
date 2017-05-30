@@ -34,10 +34,10 @@ trait EntityCastableTrait
     final public function __debugInfo(): array
     {
         return array_merge([
-            'classRoot'     => $this->getRootClassName(),
-            'classParent'   => $this->getParentClassName(),
-            'classCalled'   => $this->getCalledClassName(),
-            'identityType'  => $this->getIdentityType(),
+            'classRoot' => $this->getRootClassName(),
+            'classParent' => $this->getParentClassName(),
+            'classCalled' => $this->getCalledClassName(),
+            'identityType' => $this->getIdentityType(),
             'identityValue' => $this->getIdentity(),
         ], $this->__toArray());
     }

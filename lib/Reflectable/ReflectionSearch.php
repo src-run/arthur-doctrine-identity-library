@@ -44,7 +44,6 @@ class ReflectionSearch
      *
      * @return bool
      */
-
     protected function isMatch(IdentityNameAwareInterface $identityNameAware)
     {
         return false !== strpos($identityNameAware->name(), $this->search) || 1 === @preg_match($this->search, $identityNameAware->name());

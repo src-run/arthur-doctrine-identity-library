@@ -12,15 +12,13 @@
 namespace SR\Doctrine\ORM\Mapping;
 
 use SR\Doctrine\ORM\Mapping\Castable\EntityCastableInterface;
+use SR\Doctrine\ORM\Mapping\Cognizant\EntityCognizantInterface;
 use SR\Doctrine\ORM\Mapping\Copyable\EntityCopyableInterface;
+use SR\Doctrine\ORM\Mapping\Equatable\EntityEquatableInterface;
 use SR\Doctrine\ORM\Mapping\Identifiable\EntityIdentifiableInterface;
 use SR\Doctrine\ORM\Mapping\Introspectable\EntityIntrospectableInterface;
-use SR\Doctrine\ORM\Mapping\Equatable\EntityEquatableInterface;
-use SR\Doctrine\ORM\Mapping\Cognizant\EntityCognizantInterface;
 use SR\Doctrine\ORM\Mapping\Serializable\EntitySerializableInterface;
 
-interface EntityInterface extends EntityCastableInterface, EntityCopyableInterface, EntityIdentifiableInterface,
-                                  EntityIntrospectableInterface, EntityEquatableInterface, EntityCognizantInterface,
-                                  EntitySerializableInterface
+interface EntityInterface extends EntityCastableInterface, EntityCopyableInterface, EntityIdentifiableInterface, EntityIntrospectableInterface, EntityEquatableInterface, EntityCognizantInterface, EntitySerializableInterface
 {
 }
