@@ -11,7 +11,7 @@
 [Welcome](https://src.run/go/readme_welcome)!
 The `src-run/arthur-doctrine-identity-library` package provides the following
 
-> base identity entity classes (id- slug- uuid-based, etc)
+> Basic entity classes  for id- slug- uuid-based identities
 
 ### Grouping
 
@@ -85,7 +85,7 @@ a [Read the Docs](https://src.run/go/rtd) page with official documentation, tuto
 
 ### Discussion
 
-For general inquiries or to discuss a broad topic or idea, find "robfrawley" on Freenode. He is always happy to 
+For general inquiries or to discuss a broad topic or idea, find "robfrawley" on Freenode. He is always happy to
 discuss language-level ideas, possible new directions for a project, emerging technologies, as well as the weather.
 
 ### Issues
@@ -103,7 +103,7 @@ our [CONTRIBUTING.md](https://src.run/arthur-doctrine-identity-library/contribut
 
 ## License
 
-This project is licensed under the [MIT License](https://src.run/go/mit), an [FSF](https://src.run/go/fsf)- and 
+This project is licensed under the [MIT License](https://src.run/go/mit), an [FSF](https://src.run/go/fsf)- and
 [OSI](https://src.run/go/osi)-approved, [GPL](https://src.run/go/gpl)-compatible, permissive free software license.
 Review the [LICENSE](https://src.run/arthur-doctrine-identity-library/license) file distributed with this source code for additional
 information.

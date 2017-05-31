@@ -16,7 +16,7 @@ use Ramsey\Uuid\Uuid;
 /**
  * Class UuidEntityTest.
  */
-class UuidEntityTest extends AbstractEntityType
+class UuidEntityTest extends AbstractEntityTest
 {
     public function testAccessors()
     {

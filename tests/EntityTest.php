@@ -20,7 +20,7 @@ use SR\Reflection\Inspect;
 /**
  * Class EntityTest.
  */
-class EntityTest extends AbstractEntityType
+class EntityTest extends AbstractEntityTest
 {
     public function setUp()
     {

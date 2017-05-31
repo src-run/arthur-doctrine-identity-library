@@ -12,5 +12,5 @@ app_post: ~
 env_post: composer-del,ci-coveralls,ci-codacy
 app_path: ~
 pkg_name: arthur-doctrine-identity-library
-pkg_desc: "base identity entity classes (id- slug- uuid-based, etc)"
+pkg_desc: "Basic entity classes  for id- slug- uuid-based identities"
 pkg_bndl: false

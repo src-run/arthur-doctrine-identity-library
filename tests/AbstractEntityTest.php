@@ -11,14 +11,11 @@
 
 namespace SR\Doctrine\ORM\Mapping\Tests;
 
-use SR\Doctrine\ORM\Mapping\Tests\Fixture\IdEntityFixture;
+use SR\Doctrine\ORM\Mapping\Tests\Fixture\IdEntity;
 use SR\Doctrine\ORM\Mapping\Tests\Fixture\SlugEntityFixture;
 use SR\Doctrine\ORM\Mapping\Tests\Fixture\UuidEntityFixture;
 
-/**
- * Class AbstractEntityType.
- */
-class AbstractEntityType extends \PHPUnit_Framework_TestCase
+abstract class AbstractEntityTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var string
@@ -56,12 +53,12 @@ class AbstractEntityType extends \PHPUnit_Framework_TestCase
     protected static $identityMethodRemove;
 
     /**
-     * @var IdEntityFixture|SlugEntityFixture|UuidEntityFixture
+     * @var IdEntity|SlugEntityFixture|UuidEntityFixture
      */
     protected static $entityInitEnabled;
 
     /**
-     * @var IdEntityFixture|SlugEntityFixture|UuidEntityFixture
+     * @var IdEntity|SlugEntityFixture|UuidEntityFixture
      */
     protected static $entityInitDisabled;
 
@@ -78,12 +75,20 @@ class AbstractEntityType extends \PHPUnit_Framework_TestCase
         return [self::$className, self::$classType];
     }
 
-    public function setUpEntityInstances($name)
+    /**
+     * @param string $name
+     *
+     * @return array
+     */
+    public function setUpEntityInstances(string $name)
     {
         static::$entityInitEnabled = new $name();
         static::$entityInitDisabled = new $name(false);
 
-        return [static::$entityInitEnabled, static::$entityInitDisabled];
+        return [
+            static::$entityInitEnabled,
+            static::$entityInitDisabled
+        ];
     }
 
     public function setUpEntityAccessorMethods()
@@ -118,35 +123,8 @@ class AbstractEntityType extends \PHPUnit_Framework_TestCase
 
     public function testEntityIdentityType()
     {
-        return;
         $this->assertTrue(static::$entityInitEnabled->hasIdentityType());
-        $this->assertEquals(static::$classType, static::$entityInitEnabled->getIdentityType());
-    }
-
-    public function testEntityIdentityGetterSetter()
-    {
-        return;
-        $this->assertFalse(static::$entityInitEnabled->hasIdentity());
-        $this->assertFalse(call_user_func([static::$entityInitEnabled, static::$identityMethodExists]));
-        $this->assertNull(static::$entityInitEnabled->getIdentity());
-        $this->assertNull(call_user_func([static::$entityInitEnabled, static::$identityMethodGetter]));
-        $this->assertInstanceOf(static::$className, static::$entityInitEnabled->setIdentity('anything'));
-        $this->assertNotNull(static::$entityInitEnabled->getIdentity());
-        $this->assertNotNull(call_user_func([static::$entityInitEnabled, static::$identityMethodGetter]));
-        $this->assertEquals('anything', static::$entityInitEnabled->getIdentity());
-        $this->assertEquals('anything', call_user_func([static::$entityInitEnabled, static::$identityMethodGetter]));
-        $this->assertInstanceOf(static::$className, call_user_func([static::$entityInitEnabled, static::$identityMethodSetter], 'something-else'));
-        $this->assertNotNull(static::$entityInitEnabled->getIdentity());
-        $this->assertNotNull(call_user_func([static::$entityInitEnabled, static::$identityMethodGetter]));
-        $this->assertEquals('something-else', static::$entityInitEnabled->getIdentity());
-        $this->assertEquals('something-else', call_user_func([static::$entityInitEnabled, static::$identityMethodGetter]));
-        $this->assertTrue(static::$entityInitEnabled->hasIdentity());
-        $this->assertTrue(call_user_func([static::$entityInitEnabled, static::$identityMethodExists]));
-        $this->assertInstanceOf(static::$className, call_user_func([static::$entityInitEnabled, static::$identityMethodRemove], 'something-else'));
-        $this->assertFalse(static::$entityInitEnabled->hasIdentity());
-        $this->assertFalse(call_user_func([static::$entityInitEnabled, static::$identityMethodExists]));
-        $this->assertNull(static::$entityInitEnabled->getIdentity());
-        $this->assertNull(call_user_func([static::$entityInitEnabled, static::$identityMethodGetter]));
+        $this->assertEquals(strtolower(static::$classType), static::$entityInitEnabled->getIdentityType());
     }
 }
 

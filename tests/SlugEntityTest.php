@@ -14,7 +14,7 @@ namespace SR\Doctrine\ORM\Mapping\Tests;
 /**
  * Class SlugEntityTest.
  */
-class SlugEntityTest extends AbstractEntityType
+class SlugEntityTest extends AbstractEntityTest
 {
     public function testAccessors()
     {

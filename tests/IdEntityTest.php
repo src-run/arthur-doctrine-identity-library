@@ -13,13 +13,12 @@ namespace SR\Doctrine\ORM\Mapping\Tests;
 
 use SR\Doctrine\ORM\Mapping\EntityInterface;
 use SR\Doctrine\ORM\Mapping\Reflectable\ReflectionPropertySearch;
-use SR\Doctrine\ORM\Mapping\Tests\Fixture\EntityA;
 use SR\Reflection\Inspect;
 
 /**
  * Class IdEntityTest.
  */
-class IdEntityTest extends AbstractEntityType
+class IdEntityTest extends AbstractEntityTest
 {
     public function testAccessors()
     {

@@ -3,7 +3,7 @@
     "license": "MIT",
     "type": "library",
     "homepage": "https://src.run/arthur-doctrine-identity-library",
-    "description": "base identity entity classes (id- slug- uuid-based, etc)",
+    "description": "Basic entity classes  for id- slug- uuid-based identities",
     "support": {
         "email": "rmf@src.run",
         "issues": "https://src.run/arthur-doctrine-identity-library/issues",
