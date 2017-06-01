@@ -18,7 +18,7 @@ trait EntityCopyableTrait
     public function __clone()
     {
         if ($this->isCloneSafe()) {
-            $this->searchMethods('{^clone}')->invoke();
+            $this->searchMethods('^clone')->invoke();
         }
     }
 

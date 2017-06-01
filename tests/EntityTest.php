@@ -196,7 +196,7 @@ class EntityTest extends AbstractEntityTest
     public function testFindPropertySet()
     {
         $instance = new EntityA();
-        $properties = $this->searchPropertiesFor($instance, '{^property}')->find();
+        $properties = $this->searchPropertiesFor($instance, '^property')->find();
 
         $this->assertCount(3, $properties);
     }

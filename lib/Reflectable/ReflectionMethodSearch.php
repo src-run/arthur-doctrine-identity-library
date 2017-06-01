@@ -14,7 +14,7 @@ namespace SR\Doctrine\ORM\Mapping\Reflectable;
 use SR\Reflection\Inspect;
 use SR\Reflection\Inspector\MethodInspector;
 
-final class ReflectionMethodSearch extends ReflectionSearch
+final class ReflectionMethodSearch extends AbstractReflectionSearch
 {
     /**
      * @param mixed ...$parameters

@@ -17,7 +17,7 @@ use SR\Reflection\Inspector\Aware\ScopeCore\IdentityNameAwareInterface;
 /**
  * @internal
  */
-class ReflectionSearch
+abstract class AbstractReflectionSearch
 {
     /**
      * @var EntityInterface
@@ -46,6 +46,14 @@ class ReflectionSearch
      */
     protected function isMatch(IdentityNameAwareInterface $identityNameAware)
     {
-        return false !== strpos($identityNameAware->name(), $this->search) || 1 === @preg_match($this->search, $identityNameAware->name());
+        if (false !== strpos($identityNameAware->name(), $this->search)) {
+            return true;
+        }
+
+        if (1 === preg_match(sprintf('{%s}', $this->search), $identityNameAware->name())) {
+            return true;
+        }
+
+        return false;
     }
 }

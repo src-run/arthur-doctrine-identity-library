@@ -80,7 +80,7 @@ trait EntityCognizantTrait
      */
     final private function event(string $type, EventArgs $eventArgs = null)
     {
-        $this->searchMethods(sprintf('{^%s[A-Za-z]+}', $type))->invoke($eventArgs);
+        $this->searchMethods(sprintf('^%s[A-Za-z]+', $type))->invoke($eventArgs);
     }
 
     /**

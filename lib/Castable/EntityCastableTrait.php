@@ -13,6 +13,8 @@ namespace SR\Doctrine\ORM\Mapping\Castable;
 
 use SR\Doctrine\ORM\Mapping\Reflectable\ReflectionMethodSearch;
 use SR\Doctrine\ORM\Mapping\Reflectable\ReflectionPropertySearch;
+use SR\Reflection\Inspector\MethodInspector;
+use SR\Reflection\Inspector\PropertyInspector;
 
 trait EntityCastableTrait
 {
@@ -34,11 +36,11 @@ trait EntityCastableTrait
     final public function __debugInfo(): array
     {
         return array_merge([
-            'classRoot' => $this->getRootClassName(),
-            'classParent' => $this->getParentClassName(),
-            'classCalled' => $this->getCalledClassName(),
-            'identityType' => $this->getIdentityType(),
-            'identityValue' => $this->getIdentity(),
+            'called_class' => $this->getCalledClassName(),
+            'parent_class' => $this->getParentClassName(),
+            'root_class' => $this->getRootClassName(),
+            'identity_typed' => $this->getIdentityType(),
+            'identity_value' => $this->getIdentity(),
         ], $this->__toArray());
     }
 
@@ -48,8 +50,21 @@ trait EntityCastableTrait
     final public function __toArray(): array
     {
         return [
-            'properties' => $this->searchProperties()->find(),
-            'methods' => $this->searchMethods()->find(),
+            'properties' => array_map(function (PropertyInspector $property) {
+                return [
+                    'name' => $property->name(),
+                    'value' => $property->value($this),
+                    'visibility' => $property->visibility(),
+                    'inspector' => $property,
+                ];
+            }, $this->searchProperties()->find()),
+            'methods' => array_map(function (MethodInspector $method) {
+                return [
+                    'name' => $method->name(),
+                    'visibility' => $method->visibility(),
+                    'inspector' => $method,
+                ];
+            }, $this->searchMethods()->find()),
         ];
     }
 
